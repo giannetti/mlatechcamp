@@ -1,0 +1,379 @@
+---
+title: "Worksheet"
+author: "Francesca Giannetti"
+date: "1/31/2018"
+output: html_document
+---
+
+# Getting Started
+
+## Download today's workshop files
+
+Please bookmark or download the files for today's workshop, particularly if you are using the server set-up for RStudio (you haven't installed R or RStudio on your personal laptop). Go to <https://github.com/giannetti/mlatechcamp> and download the zipped file of today's data and worksheet. Move it to your desktop where you can easily find it again. Right click on the zipped file and extract the contents (Windows) or double-click to open (MacOS).
+
+## R and RStudio
+
+[R](https://cloud.r-project.org/) is the programming language. [RStudio](https://www.rstudio.com/) is an integrated development environment (IDE) that makes scripting in R much easier. Both are free and open source software. 
+
+When you launch RStudio, you'll notice the default panes:
+
+- Console (lower left, with the `>` prompt)
+- Environment/history (tabbed, in upper right)
+- Files/plots/packages/help (tabbed, in lower right).
+
+# Getting familiar with R
+
+## Values
+
+The simplest kind of expression is a value. A value is usually a number or a character string. It's some piece of information you want to do something with. 
+
+Click the green arrow to run the following code chunk; or, place your cursor next to the value and click Ctrl + enter (PC) or Cmd + return (Mac) to get R to evaluate the line of code. As you will see, R simply parrots the value back to you. 
+
+```{r, eval=FALSE}
+41
+```
+
+## Variables
+
+A variable is a holder for a value. 
+
+```{r, eval=FALSE}
+
+msg <- "Hey, MLATechCamp!"
+print(msg)
+print("msg") # what do the quotes change?
+
+```
+
+## Assignment
+
+In R, `<-` stores a value under a name which you can refer to later. In the example above, we assigned the value "Hey, MLATechCamp!" to the variable `msg`. What do you think will happen in this example? 
+
+```{r, eval=FALSE}
+
+a <- 10
+b <- 20
+a <- b
+print(a)
+
+```
+
+## Functions 
+
+R has a number of built-in functions that map inputs to outputs. Here's a simple example using the `sum()` and `c()` functions. To get help on these functions, type `?sum()` or `?c()` at the console. 
+
+```{r, eval=FALSE}
+
+sum(c(10,20,30)) # what's happening here? 
+
+```
+
+## More Functions
+
+Let's take some fake data: the price of LPs that I bought recently.
+
+```{r}
+lp_prices <- c(8.00, 4.00, 12.00, 24.99, 22.50, 19.95)
+```
+
+We can find the total amount that I spent using the sum function.
+
+```{r}
+sum(lp_prices)
+```
+
+(@) Try finding the average price of the LPs (using `mean()`) and the median price of the LPs (using `median()`).
+
+```{r}
+
+```
+
+(@) Can you figure out how to find the most expensive LP (hint: the LP with the maximum price) and the least expensive LP (hint: the one with the minimum price)?
+
+```{r}
+
+```
+
+# Manipulating and Analyzing Tweets about Sound Archives
+
+In this portion of the worksheet, we'll examine two datasets of tweets about digital sound archives. I collected the [British Library Sounds](http://sounds.bl.uk/) and [Ubuweb](http://ubu.com/) tweets for a [research article](https://doi.org/doi:10.7282/T37P92F7). British Library Sounds has 90,000 digital recordings of speech, music, wildlife and the environment. Ubuweb specializes in avant-garde sound and film, including poetry readings, conceptual art, ethnopoetic sound, lectures, documentaries, and sound ephemera.
+
+## Twitter Data
+
+You may want to consult Twitter's [User Data Dictionary](https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/user-object) to examine the field names and their defintions. Having a familiarity with these fields will help you to develop questions to explore. 
+
+## Load Packages and Data
+
+We'll start by loading the [tidyverse](https://cran.r-project.org/web/packages/tidyverse/index.html) package, which includes a set of helpful packages for data manipulation and visualization. dplyr, for instance, makes data manipulation in R fast and relatively easy. For help with dplyr, type `help(package=dplyr)` at the console. If any package isn't yet installed on your system, use the `install.packages()` function to get it. 
+
+Next, we'll read the Twitter datasets into two data frames so that we can manipulate them in the R environment. A data frame is a compound data type composed of variables (column headers) and observations (rows). Data frames can hold variables of different kinds, such as character data (the text of tweets), quantitative data (retweet counts), and categorical information (en, es, fr).
+
+
+```{r, message=FALSE}
+
+# install.packages("tidyverse")
+library(tidyverse)
+
+# load data
+soundarchive <- read.csv("./data/soundarchive.csv", stringsAsFactors = FALSE, encoding = "UTF-8", header = TRUE)
+ubuweb <- read.csv("./data/ubuweb.csv", stringsAsFactors = FALSE, encoding = "UTF-8", header = TRUE)
+
+```
+
+Finally, let's get an overview of your data frame with `str()`, which displays the structure of an object.
+
+```{r, eval=FALSE}
+
+str(soundarchive) # structure of British Library Sounds data frame
+
+```
+
+(@) Try using the `summary()` function this time. What's the difference between `summary()` and `str()`? Remember to type `?summary()` at the console for help with built-in functions.
+
+```{r}
+
+```
+
+R doesn't really intuit data types, as you may have noticed when you ran the `str()` function on the British Library Sounds tweets. In most cases, you need to tell R the data type of your variable. In this case, we're going to use the values of the `time` column to create a brand new column called `timestamp` with a properly formated date and time that R will recognize. Note that we need to specify the time zone as well. 
+
+Notice how we specify a single variable from a data frame by using the dollar sign ($). 
+
+```{r}
+
+soundarchive$timestamp <- as.POSIXct(soundarchive$time, format= "%d/%m/%Y %H:%M:%S", tz="GMT")
+ubuweb$timestamp <- as.POSIXct(ubuweb$time, format= "%d/%m/%Y %H:%M:%S", tz="GMT")
+
+```
+
+## Subsetting
+
+An R dataframe is a special case of a list, which is used to hold just about anything. How does one access parts of that list? Choose an element or elements from a list with `[]`. Sequences are denoted with a colon (:).
+
+```{r, eval=FALSE}
+
+soundarchive$text[1] # the first tweet
+
+soundarchive$text[2:11] # tweets 2 through 11
+
+```
+
+## Select
+
+The next several functions we'll examine are data manipulation verbs that belong to the [`dplyr`](http://dplyr.tidyverse.org/) package. How about some basic descriptive statistics? We can select which columns we want by putting the name of the column in the `select()` function. Here we pick two columns. 
+
+`dplyr` imports the pipe operator ` %>% ` from the [`magrittr`](http://cran.r-project.org/package=magrittr) package. This operator allows you to pipe the output from one function to the input of another function. It is truly a [girl's best friend](https://twitter.com/matthewdlincoln/status/917415594395176961). The keyboard shortcut for the pipe operator is shift + command + M (Mac). Go to Tools > Keyboard Shortcuts Help for more.
+
+`View` invokes a spreadsheet-style data viewer. Very handy for debugging your work!
+
+```{r, eval=FALSE}
+
+soundarchive %>% 
+  select(from_user, timestamp) %>% View
+
+```
+
+Read the documentation for this function by typing `?select` at the console.
+
+(@) Select the columns for `from_user`, `location`, and `retweets`.
+
+```{r}
+
+```
+
+## Arrange
+
+We can sort them by number of followers with `arrange()`. We'll add the `desc()` function, since it's more likely we're interested in the users with the most followers. 
+
+What do you notice about the repeated `from_user` values? 
+
+```{r, eval=FALSE}
+
+soundarchive %>% 
+  select(from_user, user_followers_count) %>%
+  arrange(desc(user_followers_count)) %>% View
+
+```
+
+(@) How would you select the Twitter user account names and their retweets number, and arrange the retweets in descending order? 
+
+```{r}
+  
+```
+
+## Group by and summarize
+
+Notice that `arrange()` sorted our entire dataframe in ascending (or descending) order. What if we wanted to calculate the total number of tweets by user account name? 
+
+We can solve this kind of problem with what Hadley Wickham calls the "split-apply-combine" pattern of data analysis. Think of it this way. First we can *split* the big data frame into separate data frames, one for each user name. Then we can *apply* our logic to get the results we want; in this case, that means counting the tweets per user name (we'll actually do this by counting the number of times each user name repeats, since each one represents a tweet). We might also want to get just the top ten rows with the highest number of tweets. Then we can *combine* those split apart data frames into a new data frame.
+
+Observe how this works. If we want to get a list of the top 10 tweeters, we can use the following code. We'll load the knitr package so we can use the `kable()` function to print a simple table.
+
+```{r, eval=FALSE}
+
+# install.packages("knitr")
+library(knitr)
+
+soundarchive %>% 
+  select(from_user) %>% 
+  group_by(from_user) %>% 
+  summarize(n=n()) %>%
+  arrange(desc(n)) %>% 
+  top_n(10, n) %>%
+  kable()
+
+```
+
+One might reasonably assume, without probing its collections, that British Library Sounds is primarily a UK national concern. Can we get a sense of how many of the users in this dataset are English speakers? How important are other user languages? 
+
+(@) Can we use `select()`, `group_by()`, `summarize()`, and `arrange()` to figure out how many tweets there are by user language? Hint: use the `user_lang` column.
+
+```{r}
+
+```
+
+## Mutate
+
+The `mutate()` function lets us create new columns out of existing columns. The `timestamp` column indicates the time of the tweet down to the second. This level of granularity might make it messy if we wanted to plot tweets over time, depending on the number of observations in our dataframe. To make that process more legible, we will create a new column called `mo` in which we round the timestamp down to the month using the `floor_date()` function of the lubridate package. Then we'll use `group_by()` and `summarize()` to count the number of tweets per month Finally, we'll use another Wickam package, [ggplot2](http://ggplot2.org/), to plot the total tweets by month. 
+
+So what does that tweet volume over time look like? 
+
+```{r, message=FALSE, warning=FALSE}
+
+# install.packages("lubridate")
+library(lubridate)
+
+# assign our modified data frame to the `soundarchive_abbr` object
+soundarchive_abbr <- soundarchive %>% 
+  select(timestamp) %>%
+  mutate(mo = floor_date(timestamp, "month")) %>%
+  group_by(mo) %>% 
+  summarize(tweets = n())
+
+# plot it using ggplot2
+ggplot(soundarchive_abbr, aes(x=mo, y=tweets)) + geom_point() + geom_line()
+
+```
+
+## Filter
+
+To keep certain rows, and drop others, we pass the `filter()` function, which creates a vector of `TRUE` and `FALSE` values, one for each row. The most common way to do that is to use a comparison operator on a column of the data. In this case, we'll use the `is.na()` function, which itself returns a response of `TRUE` for the rows where the `in_reply_to_user_id_str` column is empty (and `FALSE` for where it's filled). But we'll precede it with the `!` character, which means "is not equal to." In human language, what we're asking R to do is filter, or return, only those rows where `in_reply_to_user_id_str` is filled with a value, and drop the ones where it is empty. 
+
+The question we'll explore here: which accounts receive the most direct replies? 
+
+```{r}
+soundarchive %>% 
+  filter(!is.na(in_reply_to_user_id_str)) %>% # only including replies
+  select(in_reply_to_screen_name) %>%
+  group_by(in_reply_to_screen_name) %>% 
+  summarize(replies = n()) %>%
+  arrange(desc(replies)) %>% View 
+```
+
+(@) Use `filter` to get just the `from_user` values for the tweets that were retweeted more than 15000 times. Hint: use the `>` operator in your filter statement.
+
+```{r}
+
+```
+
+
+(@) How could we use `filter` and `select` to show which accounts have more followers than friends (a rough indicator of influence). 
+
+```{r}
+
+```
+
+Let's get some practice with using `ggplot()`. Which users in the British Library Sounds dataset had the most favorited tweets?
+
+```{r}
+
+faves <- soundarchive %>% 
+  group_by(from_user) %>% 
+  summarize(tot_faves = sum(favorites, na.rm = TRUE)) %>% # drop NA values
+  arrange(desc(tot_faves)) %>% 
+  top_n(15, tot_faves)
+
+ggplot(faves, aes(x=reorder(from_user, -tot_faves), y=tot_faves)) + # reorder bars by tot_faves values
+  geom_bar(stat = "identity") +
+  coord_flip() + # flip x and y axes
+  theme_minimal() +
+  labs(x="users", y="total favorites")
+
+```
+
+(@) Make a plot of the most retweeted users of the `ubuweb` dataset.
+
+```{r}
+
+```
+
+(@) What are the top 20 user languages of the `ubuweb` dataset. Can you make a plot of this? Hint: use `top_n()` or `slice()`. 
+
+```{r}
+
+```
+
+Several tweets in the `text` column are retweets of other users' tweets. Load the `stringr` package and look at the documentation for `?str_detect`. How many of the tweets are retweets? We will use `regex("^RT")` as the second argument of `str_detect()` to find out which tweets start with the characters "RT". 
+
+```{r}
+#install.package("stringr")
+library(stringr)
+  
+soundarchive %>% 
+  select(text) %>% 
+  mutate(rt.count = str_detect(text, regex("^RT"))) %>% 
+  summarize(retweets = sum(rt.count==TRUE)) %>% 
+  print()
+```
+
+How many tweets were there in total?
+
+```{r, eval=FALSE}
+nrow(soundarchive)
+```
+
+Let's plot the total number of tweets against the total retweets over time. 
+
+```{r, warning=FALSE}
+
+# assign modified data frame to `tweet_type` object
+tweet_type <- soundarchive %>% 
+  select(text, timestamp) %>%
+  mutate(mo = floor_date(timestamp, "month"),
+         rts = str_detect(text, regex("^RT"))) %>% 
+  group_by(mo) %>%
+  summarize(rts_count = sum(rts==TRUE), 
+            tot_count = n())
+
+# make a line plot
+ggplot(tweet_type, aes(x = mo)) + 
+  geom_line(aes(y=rts_count), linetype="dashed", color="red") +
+  geom_line(aes(y=tot_count)) +
+  labs(x="", y="tweets", title = "Total Tweets (solid) to Retweets (dashed)") +
+  theme_minimal()
+
+```
+
+(@) In addition to retweets, how many direct replies were there? Can you modify the last example to add a line for replies? Hint: second argument of `str_detect()` will be `regex("^@")`.
+
+```{r}
+
+```
+
+(@) Can you add another line for the original tweets (neither a reply nor a retweet)? 
+
+```{r}
+
+```
+
+(@) You also have the Portland `heritage_trees` dataset loaded. Can you make a plot of the tallest 7 trees and their common names?
+
+```{r}
+
+```
+
+(@) Additionally, you have L. Mullen's [historydata](https://cran.r-project.org/web/packages/historydata/index.html) pacakge loaded. Type `help(package='historydata')` at the console to read the documentation. Load any dataset in this package by typing, e.g. `data(early_colleges)`. Can you create a plot from one of these datasets?
+
+```{r}
+
+```
+
