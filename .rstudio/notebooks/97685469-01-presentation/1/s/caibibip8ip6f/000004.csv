@@ -1,5 +1,0 @@
-"0","ggplot(data = oregon, aes(x = year, y = population)) +"
-"0","  geom_bar(stat=""identity"") +"
-"0","  ggtitle(""Historical Population of Oregon"") +"
-"0","  theme(legend.position=""none"") +"
-"0","  labs(x = ""Year"", y = ""Population"")"
