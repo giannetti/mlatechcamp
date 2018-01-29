@@ -1,0 +1,96 @@
+1517253137641:# load tidyverse package
+1517253137668:library(tidyverse)
+1517253148624:library(historydata)
+1517253278007:devtools::install_github(lmullen/historydata)
+1517253343162:install.packages("historydata")
+1517253347541:library(historydata)
+1517253347573:data(us_state_populations)
+1517253347596:# Let's look at just Oregon
+1517253347611:oregon <- us_state_populations %>% filter(state == 'Oregon') %>% select(-GISJOIN)
+1517253347954:oregon
+1517253386039:ggplot(data = oregon, aes(x = year, y = population)) +
+1517253386065:geom_bar(stat="identity") +
+1517253386081:ggtitle("Historical Population of Oregon") +
+1517253386108:theme(legend.position="none") +
+1517253386123:labs(x = "Year", y = "Population")
+1517253405056:library(lubridate)
+1517253405118:soundarchive <- read.csv("data/soundarchive.csv", stringsAsFactors = F, encoding = "UTF-8", header = T)
+1517253406070:soundarchive$timestamp <- as.POSIXct(soundarchive$time, format = "%d/%m/%Y %H:%M:%S", tz="GMT")
+1517253406133:soundarchive %>%
+1517253406160:select(timestamp) %>%
+1517253406179:mutate(month = floor_date(timestamp, "month")) %>%
+1517253406192:group_by(month) %>%
+1517253406205:summarize(tweets_by_month = n()) %>%
+1517253406220:ggplot(aes(x=month, y=tweets_by_month)) + geom_point()
+1517253414019:soundarchive %>%
+1517253414036:select(timestamp) %>%
+1517253414049:mutate(month = floor_date(timestamp, "month")) %>%
+1517253414063:group_by(month) %>%
+1517253414074:summarize(tweets_by_month = n()) %>%
+1517253414085:ggplot(aes(x=month, y=tweets_by_month)) + geom_line()
+1517253431029:soundarchive %>%
+1517253431045:select(timestamp) %>%
+1517253431058:mutate(month = floor_date(timestamp, "month")) %>%
+1517253431070:group_by(month) %>%
+1517253431083:summarize(tweets_by_month = n()) %>%
+1517253431095:ggplot(aes(x=month, y=tweets_by_month)) + geom_point(alpha=0.7) +
+1517253431106:geom_smooth(color="red")
+1517253437649:library(igraph)
+1517253437798:library(ggraph)
+1517253472618:install.packages('ggraph')
+1517253552525:library(ggraph)
+1517253571167:library(igraph)
+1517253572214:library(ggraph)
+1517253578464:install.packages('ggraph')
+1517253590406:library(ggraph)
+1517259366042:# load tidyverse package
+1517259366066:library(tidyverse)
+1517259374424:install.packages("historydata")
+1517259378905:library(historydata)
+1517259378942:data(us_state_populations)
+1517259378971:# Let's look at just Oregon
+1517259378986:oregon <- us_state_populations %>% filter(state == 'Oregon') %>% select(-GISJOIN)
+1517259379782:oregon
+1517259434541:ggplot(data = oregon, aes(x = year, y = population)) +
+1517259434554:geom_bar(stat="identity") +
+1517259434568:ggtitle("Historical Population of Oregon") +
+1517259434584:theme(legend.position="none") +
+1517259434598:labs(x = "Year", y = "Population")
+1517259445706:library(lubridate)
+1517259445746:soundarchive <- read.csv("data/soundarchive.csv", stringsAsFactors = F, encoding = "UTF-8", header = T)
+1517259446624:soundarchive$timestamp <- as.POSIXct(soundarchive$time, format = "%d/%m/%Y %H:%M:%S", tz="GMT")
+1517259446661:soundarchive %>%
+1517259446682:select(timestamp) %>%
+1517259446700:mutate(month = floor_date(timestamp, "month")) %>%
+1517259446719:group_by(month) %>%
+1517259446737:summarize(tweets_by_month = n()) %>%
+1517259446755:ggplot(aes(x=month, y=tweets_by_month)) + geom_point()
+1517259459682:install.packages('ggraph')
+1517259572185:library(igraph)
+1517259572401:library(ggraph)
+1517259572858:# read data from csv file into R object
+1517259572890:ubuweb <- read.csv("data/ubuweb.csv", stringsAsFactors = F, encoding = "UTF-8", header = T)
+1517259574364:# create edge list
+1517259574383:ubuweb %>%
+1517259574398:filter(!is.na(in_reply_to_user_id_str)) %>%
+1517259574414:select(from_user, in_reply_to_screen_name) %>%
+1517259574427:graph_from_data_frame() -> ubu_net
+1517259574681:# filter to take only first 250 edges
+1517259574702:ubu_smaller <- subgraph.edges(ubu_net, 1:250)
+1517259574980:# display labels only for nodes with a degree greater than 5
+1517259574998:# code borrowed from https://rud.is/books/21-recipes/visualizing-a-graph-of-retweet-relationships.html
+1517259575019:V(ubu_smaller)$node_label <- unname(ifelse(degree(ubu_smaller)[V(ubu_smaller)] > 5, names(V(ubu_smaller)), ""))
+1517259575134:V(ubu_smaller)$node_size <- unname(ifelse(degree(ubu_smaller)[V(ubu_smaller)] > 5, degree(ubu_smaller), 0))
+1517259575309:ggraph(ubu_smaller, layout = "dh") + geom_edge_link(alpha=0.3) +
+1517259575326:scale_edge_width(range = c(0.2, 2)) +
+1517259575338:geom_node_point(alpha=0.5) +
+1517259575355:geom_node_label(aes(label=node_label, size=node_size),
+1517259575368:label.size=0, fill="#ffffff66", segment.colour="springgreen",
+1517259575380:color="slateblue", repel=TRUE) +
+1517259575392:theme_graph() + theme(legend.position="none")
+1517259593142:# load libraries and data
+1517259593185:library(leaflet)
+1517259605682:install.packages('leaflet')
+1517259734172:# load libraries and data
+1517259734195:library(leaflet)
+1517259734373:library(rgdal)

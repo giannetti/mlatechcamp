@@ -73,7 +73,7 @@ More on `tidyverse`? *See* Grolemund, Garrett, and Hadley Wickham. *R for Data S
 ## Example: Oregon Population
 
 ```{r, warning=FALSE, message=FALSE}
-# install.packages("historydata")
+install.packages("historydata")
 library(historydata)
 data(us_state_populations)
 

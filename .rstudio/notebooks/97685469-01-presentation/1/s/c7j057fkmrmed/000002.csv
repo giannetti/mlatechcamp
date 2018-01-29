@@ -1,0 +1,7 @@
+"0","soundarchive %>% "
+"0","  select(timestamp) %>% "
+"0","  mutate(month = floor_date(timestamp, ""month"")) %>% "
+"0","  group_by(month) %>% "
+"0","  summarize(tweets_by_month = n()) %>% "
+"0","  ggplot(aes(x=month, y=tweets_by_month)) + geom_point(alpha=0.7) +"
+"0","  geom_smooth(color=""red"")"

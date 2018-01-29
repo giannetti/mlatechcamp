@@ -100,7 +100,7 @@ In this portion of the worksheet, we'll examine two datasets of tweets about dig
 
 ## Twitter Data
 
-You may want to consult Twitter's [User Data Dictionary](https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/user-object) to examine the field names and their defintions. Having a familiarity with these fields will help you to develop questions to explore. 
+You may want to consult Twitter's [User Data Dictionary](https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/user-object) to examine the field names and their defintions. Having a working familiarity with these fields will help you to develop questions to explore. 
 
 ## Load Packages and Data
 
@@ -318,17 +318,18 @@ Several tweets in the `text` column are retweets of other users' tweets. Load th
 #install.package("stringr")
 library(stringr)
   
-soundarchive %>% 
+rts <- soundarchive %>% 
   select(text) %>% 
   mutate(rt.count = str_detect(text, regex("^RT"))) %>% 
-  summarize(retweets = sum(rt.count==TRUE)) %>% 
-  print()
+  summarize(retweets = sum(rt.count==TRUE))
+
+rts
 ```
 
-How many tweets were there in total?
+How tweets were *not* retweets?
 
 ```{r, eval=FALSE}
-nrow(soundarchive)
+nrow(soundarchive) - rts
 ```
 
 Let's plot the total number of tweets against the total retweets over time. 
