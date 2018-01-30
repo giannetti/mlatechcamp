@@ -47,7 +47,7 @@ Francesca Giannetti<br/>
 
 ## One more thing
 
-If you are following along in the presentation Rmarkdown file, be sure to run this little code chunk to load the tidyverse library. We'll need it for the examples work.
+If you are following along in the presentation Rmarkdown file, be sure to run this little code chunk to load the tidyverse library. We'll need it for the examples to work.
 
 ```{r}
 # load tidyverse package
