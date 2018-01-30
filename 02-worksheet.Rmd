@@ -7,10 +7,6 @@ output: html_document
 
 # Getting Started
 
-## Download today's workshop files
-
-Please bookmark or download the files for today's workshop, particularly if you are using the server set-up for RStudio (you haven't installed R or RStudio on your personal laptop). Go to <https://github.com/giannetti/mlatechcamp> and download the zipped file of today's data and worksheet. Move it to your desktop where you can easily find it again. Right click on the zipped file and extract the contents (Windows) or double-click to open (MacOS).
-
 ## R and RStudio
 
 [R](https://cloud.r-project.org/) is the programming language. [RStudio](https://www.rstudio.com/) is an integrated development environment (IDE) that makes scripting in R much easier. Both are free and open source software. 
@@ -100,7 +96,7 @@ In this portion of the worksheet, we'll examine two datasets of tweets about dig
 
 ## Twitter Data
 
-You may want to consult Twitter's [User Data Dictionary](https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/user-object) to examine the field names and their defintions. Having a working familiarity with these fields will help you to develop questions to explore. 
+You may want to consult Twitter's [User Data Dictionary](https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/user-object) to examine the field names and their defintions. Having a working familiarity with these fields will help you to develop questions to explore later.
 
 ## Load Packages and Data
 
@@ -326,7 +322,7 @@ rts <- soundarchive %>%
 rts
 ```
 
-How tweets were *not* retweets?
+How many tweets were *not* retweets?
 
 ```{r, eval=FALSE}
 nrow(soundarchive) - rts
@@ -372,7 +368,7 @@ ggplot(tweet_type, aes(x = mo)) +
 
 ```
 
-(@) Additionally, you have L. Mullen's [historydata](https://cran.r-project.org/web/packages/historydata/index.html) pacakge loaded. Type `help(package='historydata')` at the console to read the documentation. Load any dataset in this package by typing, e.g. `data(early_colleges)`. Can you create a plot from one of these datasets?
+(@) Additionally, you have L. Mullen's [historydata](https://cran.r-project.org/web/packages/historydata/index.html) package loaded. Type `help(package='historydata')` at the console to read the documentation. Load any dataset in this package by typing, e.g. `data(early_colleges)`. Can you create a plot from one of these datasets?
 
 ```{r}
 

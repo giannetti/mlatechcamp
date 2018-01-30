@@ -11,12 +11,6 @@ output:
     css: custom.css
 ---
 
-
-```{r, include=FALSE}
-# load tidyverse package
-library(tidyverse)
-```
-
 ## Introduction to Data Manipulation and Visualization in R {.title-slide}
 
 <img style="width: 200px; height: auto;" src="rstudio.png"/>
@@ -42,7 +36,23 @@ Francesca Giannetti<br/>
 
 ## Accessing RStudio Server
 
-Go to the URL on the slip of paper you received. Enter your username and password. 
+- Go to the URL that I'll give in person at the workshop (the URL on the slips is wrong. Whoops!). 
+- Enter your username and password from the slip. An Rstudio instance will open in your browser. 
+
+## Download Workshop Materials
+
+- In a second browser tab, go to <http://bit.ly/MLATechR> and download today's workshop materials (click on green "Clone or download" button and select "Download ZIP"). 
+- Back in Rstudio, click on the "Upload" button of the lower right pane and upload the zipped `mlatechcamp-master.zip` file. Click to enter the new `mlatechcamp-master` folder in your Rstudio Files pane. 
+- To open this presentation, click on `01-presentation.Rmd`.
+
+## One more thing
+
+If you are following along in the presentation Rmarkdown file, be sure to run this little code chunk to load the tidyverse library. We'll need it for the examples work.
+
+```{r}
+# load tidyverse package
+library(tidyverse)
+```
 
 ## Why program at all?
 
